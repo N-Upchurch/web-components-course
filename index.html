@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Components</title>
+    <style>
+        .btn {
+            background-color: rgba(50,50,50,1);
+            color: white;
+            border: none;
+            border-radius: .25rem;
+            min-width: 10rem;
+            padding: 1rem;
+            transition: all 0.5s;
+        }
+        .btn:hover {
+            background-color: rgba(20,20,20,1);
+        }
+        .btn:disabled {
+            background-color: rgba(100,100,100,1);
+        }
+        .fading {
+            animation: fading 1.5s infinite;
+        }
+
+        @keyframes fading {
+            0% {
+                color: rgba(100,100,100,1);
+            }
+            50% {
+                color: white;
+            }
+            100% {
+                color: rgba(100,100,100,1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <loader-button id="loading-button" onclick="load()" text="login"></loader-button>
+
+    <script>
+        const loaderButton = document.querySelector('#loading-button');
+        const load = () => {
+            const ognlButtonContent = loaderButton.textContent;
+            loaderButton.setAttribute('inProgress', 'true');
+            setTimeout(() => {
+                loaderButton.removeAttribute('inProgress');
+                console.log("Hello console!");
+            }, 2000)
+        }
+
+        class Button extends HTMLElement {
+            constructor() {
+                super();
+                const text = this.getAttribute("text");
+                this.innerHTML = `
+                    <button class="btn">${text}</button>
+                `;
+            }
+            static get observedAttributes() {
+                return ['inProgress'];
+            }
+
+            attributeChangedCallback(attribute, oldValue, newValue) {
+                console.log(attribute, oldValue, newValue);
+            }
+        }
+
+        customElements.define('loader-button', Button);
+    </script>
+</body>
+</html>
